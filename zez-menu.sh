@@ -15,6 +15,7 @@ SCRIPT_LABELS=(
     "greetd"
     "hypr plugins"
     "sunshine"
+    "font"
 )
 SCRIPT_FILES=(
     "network.sh"
@@ -24,6 +25,7 @@ SCRIPT_FILES=(
     "greetd.sh"
     "hyprplugins.sh"
     "sunshine.sh"
+    "font.sh"
 )
 SCRIPT_SUBS=(
     "all:|ip only:--ip|ssh only:--ssh|wol only:--wol|smb only:--smb"  # network
@@ -32,7 +34,8 @@ SCRIPT_SUBS=(
     ""  # fprintd
     ""  # greetd
     ""  # hypr plugins
-    "info:|install:--install|status:--status|config:--config|enable:--enable|disable:--disable"  # sunshine
+    "install:--install|status:--status|config:--conf|enable:--enable|disable:--disable"  # sunshine
+    "install:--install|uninstall:--uninstall"  # font
 )
 
 # ─── helpers ───────────────────────────────────────────────────────────────────
