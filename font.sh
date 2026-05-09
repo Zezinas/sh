@@ -69,3 +69,16 @@ fi
 
 echo
 echo "done."
+
+
+# # Step 1 — archive:
+# tar -czf fonts.tar.gz fonts/
+
+# # Step 2 — encrypt:
+# openssl enc -aes-256-cbc -pbkdf2 -in fonts.tar.gz -out fonts.tar.gz.enc
+
+# # Step 3 — verify it worked before uploading:
+# openssl enc -d -aes-256-cbc -pbkdf2 -in fonts.tar.gz.enc | tar -tzf -
+
+# # Step 4 — clean up:
+# rm fonts.tar.gz
