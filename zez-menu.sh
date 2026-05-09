@@ -46,6 +46,13 @@ require_fzf() {
     fi
 }
 
+setup_alias() {
+    if ! grep -q 'alias zez-menu' ~/.bashrc; then
+        echo 'alias zez-menu="bash <(curl -sL zezinas.github.io/sh/zez-menu.sh)"' >> ~/.bashrc
+        echo "  [ok] alias 'zez-menu' added — run: source ~/.bashrc"
+    fi
+}
+
 fzf_menu() {
     local header=$1
     shift
@@ -75,6 +82,7 @@ run_script() {
 # ─── main ──────────────────────────────────────────────────────────────────────
 
 require_fzf
+setup_alias
 
 while true; do
     # main menu
