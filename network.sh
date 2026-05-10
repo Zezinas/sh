@@ -115,16 +115,8 @@ setup_smb() {
         sudo pacman -S --noconfirm samba
     fi
 
-    # register current user in samba password db if not already present
-    if ! sudo pdbedit -L | grep -q "^$USER:"; then
-        info "creating samba user: $USER (enter a samba password below)"
-        sudo smbpasswd -a "$USER"
-    else
-        ok "samba user $USER already registered"
-    fi
-
-    # write smb.conf
-    info "writing /etc/samba/smb.conf"
+    # write smb.conf (must happen before pdbedit/smbpasswd)
+    info "writing /etc/samba/smb.conf..."
     local conf
     conf=$(cat <<'EOF'
 [global]
@@ -160,30 +152,38 @@ EOF
         local name path
         name="${entry%%:*}"
         path="${entry#*:}"
-
-        # skip if path doesn't exist
         if [[ ! -d "$path" ]]; then
             info "skipping [$name] — path not found: $path"
             continue
         fi
-
         has_shares=1
-        conf+="[$name]
+        conf+="
+[$name]
     path = $path
     browseable = yes
     read only = no
     valid users = $USER
     create mask = 0664
     directory mask = 0775
-
 "
     done
 
     echo "$conf" | sudo tee /etc/samba/smb.conf > /dev/null
 
-    sudo systemctl enable smb nmb
+    # register user in samba password db
+    if ! sudo pdbedit -L | grep -q "^$USER:"; then
+        info "creating samba user: $USER (enter a samba password below)"
+        sudo smbpasswd -a "$USER"
+    else
+        ok "samba user $USER already registered"
+    fi
+
+    sudo systemctl enable --now smb nmb
     sudo systemctl restart smb nmb
-    systemctl is-active --quiet smb && ok "smbd running" || { err "smbd failed to start"; return 1; }
+
+    systemctl is-active --quiet smb \
+        && ok "smbd running" \
+        || { err "smbd failed to start"; return 1; }
 
     sudo ufw allow samba
 
