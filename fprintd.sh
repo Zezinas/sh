@@ -25,7 +25,7 @@ sudo pacman -S --needed --noconfirm fprintd opencv
 echo
 echo "--- Installing libfprint-cs9711-git (patched driver) from AUR..."
 sudo pacman -Rdd libfprint --noconfirm || true
-yay -S --noconfirm libfprint-cs9711-rebase-git
+paru -S --noconfirm libfprint-cs9711-rebase-git
 
 # 4. Restart fprintd service
 echo
@@ -74,7 +74,7 @@ echo "DONE!"
 # sudo pacman -S fprintd opencv
 
 # 2. Install patched libfprint
-# yay -S libfprint-cs9711-git --rebuild
+# paru -S libfprint-cs9711-git --rebuild
 
 # 3. Restart service
 # sudo systemctl restart fprintd

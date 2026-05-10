@@ -5,8 +5,8 @@ trap 'echo "Error occurred on line $LINENO"; exit 1' ERR
 echo "=== Starting package installation ==="
 
 # --- CORE HELPERS ---
-echo "Installing yay (AUR helper)..."
-sudo pacman -Syu --noconfirm yay
+echo "Updating system and ensuring paru (AUR helper) is available..."
+sudo pacman -Syu --noconfirm paru
 
 # --- OFFICIAL REPO PACKAGES ---
 # Core Hyprland stuff
@@ -25,7 +25,6 @@ OFFICIAL_HYPRLAND=(
     greetd                      # Greetd display manager
     greetd-tuigreet             # Greetd display manager TUI
     uwsm                        # Universal Wayland Sesion Manager
-    # libnewt                     # ??? Terminal text editor (uwsm dependency)
 
     mako                        # Notifications daemon
     hyprpolkitagent             # Polkit agent
@@ -51,15 +50,19 @@ OFFICIAL_APPLICATIONS=(
     alacritty                   # GPU-accelerated terminal emulator
     zed                         # Modern code editor
     zen-browser-bin             # Web Browser
+    # yazi                      # Terminal file manager
+
     dolphin                     # Graphical file manager
-    # yazi
-    # pcmanfm-qt
+    xdg-desktop-portal-kde      # KDE dolphin file picker portal
 )
 
 # Core gaming
 OFFICIAL_GAMES=(
     cachyos-gaming-meta         # Gaming meta package
-    cachyos-gaming-applications # Gaming applications meta package (steam, mangohud...)
+    steam                       # Steam gaming platform
+    mangohud                    # Mangohud - Hardware monitoring overlay
+    lib32-mangohud              # Mangohud library - 32-bit hardware monitoring overlay library
+    # gamescope                 # lightweight display compositor by steam
     discord                     # Chat / communication app
 )
 
@@ -83,7 +86,28 @@ echo "Installing GAMING packages from official repos..."
 sudo pacman -S --noconfirm --needed "${OFFICIAL_GAMES[@]}"
 
 # Install AUR repo packages
-echo "Installing AUR packages via yay..."
-yay -S --noconfirm --needed "${AUR_PACKAGES[@]}"
+echo "Installing AUR packages via paru..."
+paru -S --noconfirm --needed "${AUR_PACKAGES[@]}"
 
 echo "=== Package installation completed! ==="
+
+
+echo "=== Setting default applications ... ==="
+
+cat > ~/.config/mimeapps.list << 'EOF'
+[Default Applications]
+x-scheme-handler/http=zen-browser.desktop
+x-scheme-handler/https=zen-browser.desktop
+text/html=dev.zed.Zed.desktop
+application/xhtml+xml=dev.zed.Zed.desktop
+text/plain=dev.zed.Zed.desktop
+text/x-python=dev.zed.Zed.desktop
+text/x-shellscript=dev.zed.Zed.desktop
+EOF
+
+echo "=== Default application setup completed! ==="
+
+
+echo "=== Removing useless packages... ==="
+sudo pacman -Rdd --noconfirm xdg-desktop-portal-gtk 2>/dev/null || true
+echo "=== DONE. DONE. DONE. DONE. DONE. ==="
