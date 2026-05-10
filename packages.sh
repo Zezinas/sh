@@ -41,8 +41,18 @@ OFFICIAL_HYPRLAND=(
 OFFICIAL_UTILITY=(
     fastfetch                   # System info summary
     nano                        # Terminal text editor
+    7zip                        # Archive utility (7z/zip/tar/rar)
     openssh                     # SSH client/server
     samba                       # SMB/CIFS file sharing
+
+    git                         # Version control
+    rsync                       # File sync and backup utility
+    wget                        # Command-line file downloader
+    ripgrep                     # Fast recursive text search
+    btop                        # Interactive system resource monitor
+    nano-syntax-highlighting    # Syntax highlighting for nano
+    duf                         # Disk usage viewer (modern df)
+    pv                          # Progress indicator for pipes
 )
 
 # Core utilities / applications
@@ -54,6 +64,7 @@ OFFICIAL_APPLICATIONS=(
 
     dolphin                     # Graphical file manager
     xdg-desktop-portal-kde      # KDE dolphin file picker portal
+    ark                         # GUI Archive manager
 )
 
 # Core gaming
@@ -96,13 +107,27 @@ echo "=== Setting default applications ... ==="
 
 cat > ~/.config/mimeapps.list << 'EOF'
 [Default Applications]
+# Browser stuff
 x-scheme-handler/http=zen-browser.desktop
 x-scheme-handler/https=zen-browser.desktop
+
+# Development & Text (Zed)
+text/plain=dev.zed.Zed.desktop
+application/json=dev.zed.Zed.desktop
+application/javascript=dev.zed.Zed.desktop
+text/javascript=dev.zed.Zed.desktop
 text/html=dev.zed.Zed.desktop
 application/xhtml+xml=dev.zed.Zed.desktop
-text/plain=dev.zed.Zed.desktop
 text/x-python=dev.zed.Zed.desktop
 text/x-shellscript=dev.zed.Zed.desktop
+text/markdown=dev.zed.Zed.desktop
+application/xml=dev.zed.Zed.desktop
+text/xml=dev.zed.Zed.desktop
+text/css=dev.zed.Zed.desktop
+
+# Broad fallbacks
+application/x-yaml=dev.zed.Zed.desktop
+application/toml=dev.zed.Zed.desktop
 EOF
 
 echo "=== Default application setup completed! ==="

@@ -10,32 +10,32 @@ BASE_URL=https://zezinas.github.io/sh
 SCRIPT_LABELS=(
     "network"
     "packages"
+    "font"
     "ddcutil"
     "fprintd"
     "greetd"
     "hypr plugins"
     "sunshine"
-    "font"
 )
 SCRIPT_FILES=(
     "network.sh"
     "packages.sh"
+    "font.sh"
     "ddcutil.sh"
     "fprintd.sh"
     "greetd.sh"
     "hyprplugins.sh"
     "sunshine.sh"
-    "font.sh"
 )
 SCRIPT_SUBS=(
     "all:|ip only:--ip|ssh only:--ssh|wol only:--wol|smb only:--smb"  # network
     ""  # packages
+    "install:--install|uninstall:--uninstall"  # font
     ""  # ddcutil
     ""  # fprintd
     ""  # greetd
     ""  # hypr plugins
     "install:--install|status:--status|config:--conf|enable:--enable|disable:--disable"  # sunshine
-    "install:--install|uninstall:--uninstall"  # font
 )
 
 # ─── helpers ───────────────────────────────────────────────────────────────────
