@@ -73,6 +73,7 @@ OFFICIAL_GAMES=(
     steam                       # Steam gaming platform
     mangohud                    # Mangohud - Hardware monitoring overlay
     lib32-mangohud              # Mangohud library - 32-bit hardware monitoring overlay library
+    proton-ge-custom-bin        # Proton GE custom binary --- --- --- PROTON_ENABLE_WAYLAND=1 %command%
     # gamescope                 # lightweight display compositor by steam
     discord                     # Chat / communication app
 )

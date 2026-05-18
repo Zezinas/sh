@@ -33,24 +33,38 @@ fonts_install() {
     info "installing..."
     mkdir -p "$FONT_DEST/SF-Pro"
     cp /tmp/fonts/SF-Pro/*.otf "$FONT_DEST/SF-Pro/"
+    mkdir -p "$FONT_DEST/CMRT"
+    cp /tmp/fonts/CMRT/*.ttf "$FONT_DEST/CMRT/"
+
     fc-cache -f
     rm -rf /tmp/fonts
 
     ok "SF Pro fonts installed"
     fc-list | grep -i "SF Pro" | awk -F: '{print "  "$1}' | sort
+    ok "CMRT fonts installed"
+    fc-list | grep -i "Archivo\|OPTI" | awk -F: '{print "  "$1}' | sort
 }
 
 fonts_uninstall() {
     header "fonts — uninstall"
 
-    if [[ ! -d "$FONT_DEST/SF-Pro" ]]; then
-        info "SF Pro not installed, nothing to remove"
+    local removed=0
+    if [[ -d "$FONT_DEST/SF-Pro" ]]; then
+        rm -rf "$FONT_DEST/SF-Pro"
+        ok "SF Pro fonts removed"
+        removed=1
+    fi
+    if [[ -d "$FONT_DEST/CMRT" ]]; then
+        rm -rf "$FONT_DEST/CMRT"
+        ok "CMRT fonts removed"
+        removed=1
+    fi
+    if [[ $removed -eq 0 ]]; then
+        info "no fonts installed, nothing to remove"
         return 0
     fi
 
-    rm -rf "$FONT_DEST/SF-Pro"
     fc-cache -f
-    ok "SF Pro fonts removed"
 }
 
 # ─── main ──────────────────────────────────────────────────────────────────────
