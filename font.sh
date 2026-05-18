@@ -6,7 +6,7 @@ trap 'echo "error on line $LINENO" >&2; exit 1' ERR
 
 # ─── config ────────────────────────────────────────────────────────────────────
 
-FONTS_URL=https://github.com/Zezinas/sh/releases/download/fonts/fonts.tar.gz.enc
+FONTS_URL=https://github.com/Zezinas/sh/releases/download/fonts2/fonts.tar.gz.enc
 FONT_DEST=$HOME/.local/share/fonts
 
 # ─── helpers ───────────────────────────────────────────────────────────────────
