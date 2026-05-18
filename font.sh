@@ -30,9 +30,6 @@ fonts_install() {
         | tar -xzf - -C /tmp/ \
         || { err "download or decryption failed — wrong password?"; exit 1; }
 
-    info "contents of /tmp/fonts/CMRT:"
-    ls /tmp/fonts/CMRT/ 2>&1 | awk '{print "  "$0}'
-
     info "installing..."
     mkdir -p "$FONT_DEST/SF-Pro"
     cp /tmp/fonts/SF-Pro/*.otf "$FONT_DEST/SF-Pro/"
