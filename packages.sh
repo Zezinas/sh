@@ -12,7 +12,7 @@ sudo pacman -Syu --noconfirm paru
 # Core Hyprland stuff
 OFFICIAL_HYPRLAND=(
     hyprland                    # Wayland compositor
-    quickshell-git              # Custom shell for Hyprland
+    quickshell                  # Custom shell for Hyprland     [ quickshell-git ]
 
     hyprpaper                   # Wallpaper manager for Hyprland
     hypridle                    # Idle manager (suspend, lock, etc.)
@@ -69,19 +69,19 @@ OFFICIAL_APPLICATIONS=(
 
 # Core gaming
 OFFICIAL_GAMES=(
+    discord                     # Chat / communication app
     cachyos-gaming-meta         # Gaming meta package
     steam                       # Steam gaming platform
     mangohud                    # Mangohud - Hardware monitoring overlay
     lib32-mangohud              # Mangohud library - 32-bit hardware monitoring overlay library
-    proton-ge-custom-bin        # Proton GE custom binary --- --- --- PROTON_ENABLE_WAYLAND=1 %command%
     # gamescope                 # lightweight display compositor by steam
-    discord                     # Chat / communication app
 )
 
 # --- AUR PACKAGES ---
 # Optional / AUR apps
 AUR_PACKAGES=(
     vicinae-bin                 # Raycast-like launcher
+    proton-ge-custom-bin        # Proton GE custom binary --- --- --- PROTON_ENABLE_WAYLAND=1 %command%
 )
 
 # Install official repo packages
