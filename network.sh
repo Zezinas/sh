@@ -226,3 +226,7 @@ else
     echo
     echo "done."
 fi
+
+### TODO boot time optimizations
+# sudo systemctl disable NetworkManager-wait-online.service
+# sudo systemctl disable nmb 2>/dev/null || true
