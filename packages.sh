@@ -11,23 +11,21 @@ sudo pacman -Syu --noconfirm paru
 # --- OFFICIAL REPO PACKAGES ---
 # Core Hyprland stuff
 OFFICIAL_HYPRLAND=(
-    hyprland                    # Wayland compositor
+    mangowm                     # Wayland compositor
     quickshell                  # Custom shell for Hyprland     [ quickshell-git ]
 
-    hyprpaper                   # Wallpaper manager for Hyprland
-    hypridle                    # Idle manager (suspend, lock, etc.)
-    hyprlock                    # Lock screen utility
-    hyprcursor                  # Cursor theme/management
+    swaybg                      # Wallpaper manager for Wayland compositor
+    swayidle                    # Idle manager (suspend, lock, etc.)
 
     xorg-xwayland               # XWayland support for running X apps
-    xdg-desktop-portal-hyprland # Flatpak & screen sharing integration
+    xdg-desktop-portal-wlr      # Flatpak & screen sharing integration
 
     greetd                      # Greetd display manager
     greetd-tuigreet             # Greetd display manager TUI
     uwsm                        # Universal Wayland Sesion Manager
 
     mako                        # Notifications daemon
-    hyprpolkitagent             # Polkit agent
+    mate-polkit                 # Polkit agent
 
     grim                        # Screenshot utility
     slurp                       # Region selection utility
@@ -63,8 +61,9 @@ OFFICIAL_APPLICATIONS=(
     # yazi                      # Terminal file manager
 
     dolphin                     # Graphical file manager
-    xdg-desktop-portal-kde      # KDE dolphin file picker portal
     ark                         # GUI Archive manager
+    # xdg-desktop-portal-gtk      # GTK file picker portal
+    # xdg-desktop-portal-termfilechooser
 )
 
 # Core gaming
@@ -134,6 +133,6 @@ EOF
 echo "=== Default application setup completed! ==="
 
 
-echo "=== Removing useless packages... ==="
-sudo pacman -Rdd --noconfirm xdg-desktop-portal-gtk 2>/dev/null || true
-echo "=== DONE. DONE. DONE. DONE. DONE. ==="
+# echo "=== Removing useless packages... ==="
+# sudo pacman -Rdd --noconfirm xdg-desktop-portal-gtk 2>/dev/null || true
+# echo "=== DONE. DONE. DONE. DONE. DONE. ==="
