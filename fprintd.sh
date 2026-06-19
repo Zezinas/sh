@@ -35,7 +35,7 @@ BUILD_DIR="$HOME/.cache/libfprint-cs9711-build"
 rm -rf "$BUILD_DIR"
 git clone https://github.com/Zezinas/libfprint-cs9711-rebase-pkgbuild.git "$BUILD_DIR"
 cd "$BUILD_DIR"
-paru -Bi --noconfirm
+paru -U --noconfirm
 cd -
 rm -rf "$BUILD_DIR"
 
