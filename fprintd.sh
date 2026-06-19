@@ -31,7 +31,7 @@ rm -rf "$BUILD_DIR"
 git clone https://github.com/Zezinas/libfprint-cs9711-rebase-pkgbuild.git "$BUILD_DIR"
 cd "$BUILD_DIR"
 makepkg -si --noconfirm
-cd "$OLDPWD"
+cd "$HOME"
 
 # 4. Restart fprintd service
 echo
@@ -58,13 +58,25 @@ echo "--- Configuring PAM for sudo..."
 sudo cp /etc/pam.d/sudo /etc/pam.d/sudo.bak
 
 # 2. Check for existing configuration to avoid duplicates
+sudo cp /etc/pam.d/login /etc/pam.d/login.bak 2>/dev/null || true
+
+# Configure PAM for [ SUDO ] auth
 if ! grep -q "pam_fprintd.so" /etc/pam.d/sudo; then
     # Use 'sed' to insert the line after the first line (usually #%PAM-1.0)
     sudo sed -i '1a auth      sufficient    pam_fprintd.so' /etc/pam.d/sudo
     echo "Successfully added: auth sufficient pam_fprintd.so to /etc/pam.d/sudo"
 else
-    echo "Fingerprint configuration already exists in /etc/pam.d/sudo."
+    echo "Fingerprint [ SUDO ] configuration already exists in /etc/pam.d/sudo"
 fi
+
+# Configure PAM for [ LOGIN ] lockscreen
+if ! grep -q "pam_fprintd.so" /etc/pam.d/login; then
+    sudo sed -i '1a auth      sufficient    pam_fprintd.so' /etc/pam.d/login
+    echo "Successfully added fprintd to /etc/pam.d/login"
+else
+    echo "Fingerprint [ LOGIN ] configuration already exists in /etc/pam.d/login"
+fi
+
 
 echo
 echo "DONE!"
