@@ -21,11 +21,23 @@ echo
 echo "--- Installing fprintd and opencv..."
 sudo pacman -S --needed --noconfirm fprintd opencv
 
-# 3. Install patched libfprint from AUR
+# # 3. Install patched libfprint from AUR
+# echo
+# echo "--- Installing libfprint-cs9711-git (patched driver) from AUR..."
+# sudo pacman -Rdd libfprint --noconfirm || true
+# paru -S --noconfirm libfprint-cs9711-rebase-git
+
+# 3. Install patched libfprint from personal repo (via paru, no AUR)
 echo
-echo "--- Installing libfprint-cs9711-git (patched driver) from AUR..."
+echo "--- Building libfprint-cs9711-rebase-git from personal repo via paru..."
 sudo pacman -Rdd libfprint --noconfirm || true
-paru -S --noconfirm libfprint-cs9711-rebase-git
+BUILD_DIR="$HOME/.cache/libfprint-cs9711-build"
+rm -rf "$BUILD_DIR"
+git clone https://github.com/Zezinas/libfprint-cs9711-rebase-pkgbuild.git "$BUILD_DIR"
+cd "$BUILD_DIR"
+paru -Bi --noconfirm
+cd -
+rm -rf "$BUILD_DIR"
 
 # 4. Restart fprintd service
 echo
