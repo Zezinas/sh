@@ -99,7 +99,7 @@ if [[ -n "$QS_BIN" ]] && [[ -n "$CAGE_BIN" ]] && [[ -f "$GREET_QML/shell.qml" ]]
     GREETER_CMD="cage -- quickshell -p $GREET_QML/shell.qml"
 else
     # Fallback: tuigreet
-    GREETER_CMD="tuigreet --cmd $SESSION_CMD"
+    GREETER_CMD="tuigreet --cmd '$SESSION_CMD'"
 fi
 
 CONFIG_FILE="/etc/greetd/config.toml"
