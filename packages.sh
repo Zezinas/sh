@@ -18,8 +18,11 @@ OFFICIAL_HYPRLAND=(
     swayidle                    # Idle manager (suspend, lock, etc.)
 
     xorg-xwayland               # XWayland support for running X apps
+    xdg-desktop-portal          # ???
     xdg-desktop-portal-wlr      # Flatpak & screen sharing integration
+    # xdg-user-dirs               # generate default folders, commnad: xdg-user-dirs-update
 
+    cage                        # ??? greetd ui stuff?
     greetd                      # Greetd display manager
     greetd-tuigreet             # Greetd display manager TUI
     uwsm                        # Universal Wayland Sesion Manager
@@ -136,3 +139,6 @@ echo "=== Default application setup completed! ==="
 # echo "=== Removing useless packages... ==="
 # sudo pacman -Rdd --noconfirm xdg-desktop-portal-gtk 2>/dev/null || true
 # echo "=== DONE. DONE. DONE. DONE. DONE. ==="
+
+# A.** `systemctl --user enable --now xdg-desktop-portal.service` (clean, persistent)
+# B.** Add `exec-once = /usr/lib/xdg-desktop-portal -r` to MangoWM's config (lives with compositor config)
