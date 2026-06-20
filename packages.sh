@@ -9,26 +9,43 @@ echo "Updating system and ensuring paru (AUR helper) is available..."
 sudo pacman -Syu --noconfirm paru
 
 # --- OFFICIAL REPO PACKAGES ---
-# Core Hyprland stuff
+# Default: install everything. Toggle any of these to 0 to skip.
+INSTALL_HYPRLAND=1
+INSTALL_MANGOWM=1
+INSTALL_WAYLAND=1
+INSTALL_UTILITY=1
+INSTALL_APPLICATIONS=1
+INSTALL_GAMES=1
+INSTALL_AUR=1
+
+# Compositor-specific packages
 OFFICIAL_HYPRLAND=(
+    hyprland                    # Wayland compositor
+    hyprcursor                  # Hyprland cursor
+    xdg-desktop-portal-hyprland # Hyprland  - Flatpak & screen sharing integration
+)
+OFFICIAL_MANGOWM=(
     mangowm                     # Wayland compositor
+    xdg-desktop-portal-wlr      # Mango     - Flatpak & screen sharing integration
+    # xdg-user-dirs               # generate default folders, commnad: xdg-user-dirs-update
+)
+
+# Shared Wayland stack (greetd, uwsm, quickshell, portals, helpers)
+OFFICIAL_WAYLAND=(
     quickshell                  # Custom shell for Hyprland     [ quickshell-git ]
 
     swaybg                      # Wallpaper manager for Wayland compositor
     swayidle                    # Idle manager (suspend, lock, etc.)
 
+    mako                        # Notifications daemon
+    hyprpolkitagent             # Polkit agent
     xorg-xwayland               # XWayland support for running X apps
     xdg-desktop-portal          # ???
-    xdg-desktop-portal-wlr      # Flatpak & screen sharing integration
-    # xdg-user-dirs               # generate default folders, commnad: xdg-user-dirs-update
 
     cage                        # ??? greetd ui stuff?
     greetd                      # Greetd display manager
     greetd-tuigreet             # Greetd display manager TUI
     uwsm                        # Universal Wayland Sesion Manager
-
-    mako                        # Notifications daemon
-    mate-polkit                 # Polkit agent
 
     grim                        # Screenshot utility
     slurp                       # Region selection utility
@@ -76,32 +93,55 @@ OFFICIAL_GAMES=(
     steam                       # Steam gaming platform
     mangohud                    # Mangohud - Hardware monitoring overlay
     lib32-mangohud              # Mangohud library - 32-bit hardware monitoring overlay library
-    # gamescope                 # lightweight display compositor by steam
+    gamescope                   # lightweight display compositor by steam
 )
 
 # --- AUR PACKAGES ---
 # Optional / AUR apps
 AUR_PACKAGES=(
-    vicinae-bin                 # Raycast-like launcher
     proton-ge-custom-bin        # Proton GE custom binary --- --- --- PROTON_ENABLE_WAYLAND=1 %command%
+    vicinae-bin                 # Raycast-like launcher
+    app2unit                    # uwsm faster app launch using bash
 )
 
-# Install official repo packages
-echo "Installing HYPRLAND packages from official repos..."
-sudo pacman -S --noconfirm --needed "${OFFICIAL_HYPRLAND[@]}"
 
-echo "Installing UTILITY packages from official repos..."
-sudo pacman -S --noconfirm --needed "${OFFICIAL_UTILITY[@]}"
+install_official() {
+    local label=$1; shift
+    local -n pkgs=$1                 # nameref: indirect array
 
-echo "Installing APPLICATION packages from official repos..."
-sudo pacman -S --noconfirm --needed "${OFFICIAL_APPLICATIONS[@]}"
+    if (( ${#pkgs[@]} == 0 )); then
+        echo "  [skip] $label (no packages)"
+        return
+    fi
 
-echo "Installing GAMING packages from official repos..."
-sudo pacman -S --noconfirm --needed "${OFFICIAL_GAMES[@]}"
+    echo "  [..] Installing $label (${#pkgs[@]} packages)..."
+    sudo pacman -S --noconfirm --needed "${pkgs[@]}"
+}
 
-# Install AUR repo packages
-echo "Installing AUR packages via paru..."
-paru -S --noconfirm --needed "${AUR_PACKAGES[@]}"
+declare -A SECTIONS=(
+    ["Hyprland"]="INSTALL_HYPRLAND:OFFICIAL_HYPRLAND"
+    ["MangoWM"]="INSTALL_MANGOWM:OFFICIAL_MANGOWM"
+    ["Wayland stack"]="INSTALL_WAYLAND:OFFICIAL_WAYLAND"
+    ["Utilities"]="INSTALL_UTILITY:OFFICIAL_UTILITY"
+    ["Applications"]="INSTALL_APPLICATIONS:OFFICIAL_APPLICATIONS"
+    ["Games"]="INSTALL_GAMES:OFFICIAL_GAMES"
+)
+
+for label in "${!SECTIONS[@]}"; do
+    IFS=':' read -r flag array <<< "${SECTIONS[$label]}"
+    if (( flag )); then
+        install_official "$label" "$array"
+    else
+        echo "  [skip] $label (disabled)"
+    fi
+done
+
+if (( INSTALL_AUR )); then
+    if (( ${#AUR_PACKAGES[@]} )); then
+        echo "  [..] Installing AUR packages (${#AUR_PACKAGES[@]})..."
+        paru -S --noconfirm --needed "${AUR_PACKAGES[@]}"
+    fi
+fi
 
 echo "=== Package installation completed! ==="
 
