@@ -33,7 +33,7 @@ fi
 
 case "$GREETER_MODE" in
     tuigreet)
-        GREETER_CMD="tuigreet --cmd 'uwsm start'"
+        GREETER_CMD="tuigreet --cmd 'uwsm start' --sessions /usr/share/wayland-sessions"
         ;;
     quickshell)
         mkdir -p "$QS_GREET_QML"
