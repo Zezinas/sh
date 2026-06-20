@@ -33,7 +33,20 @@ fi
 
 case "$GREETER_MODE" in
     tuigreet)
-        GREETER_CMD="tuigreet --cmd 'uwsm start' --sessions /usr/share/wayland-sessions"
+        SESSION_DIR="/usr/local/share/wayland-sessions-uwsm"
+        sudo mkdir -p "$SESSION_DIR"
+
+        for session in mango hyprland hyprland-uwsm; do
+            sudo tee "$SESSION_DIR/$session.desktop" > /dev/null << DESKTOPEOF
+[Desktop Entry]
+Name=${session%.*}
+Comment=${session} with uwsm
+Exec=uwsm start ${session}.desktop
+Type=Application
+DESKTOPEOF
+        done
+
+        GREETER_CMD="tuigreet --cmd 'uwsm start mango.desktop' --sessions $SESSION_DIR"
         ;;
     quickshell)
         mkdir -p "$QS_GREET_QML"
