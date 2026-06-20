@@ -33,7 +33,7 @@ fi
 
 case "$GREETER_MODE" in
     tuigreet)
-        GREETER_CMD="tuigreet --session --cmd 'uwsm start'"
+        GREETER_CMD="tuigreet --cmd 'uwsm start'"
         ;;
     quickshell)
         mkdir -p "$QS_GREET_QML"
@@ -60,7 +60,7 @@ vt = 1
 
 [default_session]
 command = "$GREETER_CMD"
-user = "$GREET_USER"
+user = "greeter"
 EOF
 
 # ==============
