@@ -46,7 +46,10 @@ Type=Application
 DESKTOPEOF
         done
 
-        GREETER_CMD="tuigreet --cmd 'uwsm start mango.desktop' --sessions $SESSION_DIR"
+        sudo mkdir -p /var/cache/tuigreet
+        sudo chown greeter:greeter /var/cache/tuigreet
+
+        GREETER_CMD="tuigreet --cmd 'uwsm start mango.desktop' --sessions $SESSION_DIR --remember --user-menu"
         ;;
     quickshell)
         mkdir -p "$QS_GREET_QML"
