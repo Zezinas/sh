@@ -77,6 +77,13 @@ else
     echo "Fingerprint [ LOGIN ] configuration already exists in /etc/pam.d/login"
 fi
 
+# Configure PAM for [ GREETD ] auth
+if ! grep -q "pam_fprintd.so" /etc/pam.d/greetd; then
+    sudo sed -i '1a auth      sufficient    pam_fprintd.so' /etc/pam.d/greetd
+    echo "Successfully added fprintd to /etc/pam.d/greetd"
+else
+    echo "Fingerprint [ GREETD ] configuration already exists in /etc/pam.d/greetd"
+fi
 
 echo
 echo "DONE!"
