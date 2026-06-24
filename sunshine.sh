@@ -65,8 +65,10 @@ sunshine_config() {
 
 sunshine_enable() {
     header "sunshine — enable"
-    info "creating headless monitor (TV)..."
-    hyprctl output create headless TV
+    info "creating headless monitor (HEADLESS-1)..."
+    mmsg dispatch create_virtual_output
+    sleep 0.5
+    wlr-randr --output HEADLESS-1 --custom-mode 3840x2160@60Hz --pos 2560x0 --scale 1
     info "starting sunshine..."
     systemctl --user start sunshine
     ok "sunshine running — configure at https://localhost:47990"
@@ -76,8 +78,8 @@ sunshine_disable() {
     header "sunshine — disable"
     info "stopping sunshine..."
     systemctl --user stop sunshine
-    info "removing headless monitor (TV)..."
-    hyprctl output remove TV
+    info "removing headless monitor (HEADLESS-1)..."
+    mmsg dispatch destroy_all_virtual_output
     ok "sunshine stopped"
 }
 
