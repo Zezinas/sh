@@ -68,14 +68,14 @@ sunshine_enable() {
     info "creating headless monitor (HEADLESS-1)..."
     mmsg dispatch create_virtual_output
     info "starting sunshine..."
-    systemctl --user start sunshine
+    systemctl --user start app-dev.lizardbyte.app.Sunshine.service
     ok "sunshine running — configure at https://localhost:47990"
 }
 
 sunshine_disable() {
     header "sunshine — disable"
     info "stopping sunshine..."
-    systemctl --user stop sunshine
+    systemctl --user stop app-dev.lizardbyte.app.Sunshine.service
     info "removing headless monitor (HEADLESS-1)..."
     mmsg dispatch destroy_all_virtual_output
     ok "sunshine stopped"
