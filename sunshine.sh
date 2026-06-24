@@ -67,8 +67,6 @@ sunshine_enable() {
     header "sunshine — enable"
     info "creating headless monitor (HEADLESS-1)..."
     mmsg dispatch create_virtual_output
-    sleep 0.5
-    wlr-randr --output HEADLESS-1 --custom-mode 3840x2160@60Hz --pos 2560x0 --scale 1
     info "starting sunshine..."
     systemctl --user start sunshine
     ok "sunshine running — configure at https://localhost:47990"
