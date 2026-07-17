@@ -80,9 +80,8 @@ OFFICIAL_APPLICATIONS=(
     zen-browser-bin             # Web Browser
     # yazi                      # Terminal file manager
 
-    dolphin                     # Graphical file manager
-    ark                         # GUI Archive manager
-    # xdg-desktop-portal-gtk      # GTK file picker portal
+    nautilus                    # Graphical file manager
+    # xdg-desktop-portal-gtk    # GTK file picker portal
     # xdg-desktop-portal-termfilechooser
 )
 
