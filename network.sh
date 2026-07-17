@@ -19,6 +19,7 @@ WOL_MAC=00-E0-22-80-A2-E7     # used only for reference / wakeonlan calls
 # SMB shares — add/remove lines here, format: "share_name:/path/to/dir"
 SMB_SHARES=(
     "Media:/mnt/media"
+    "Desktop:/home/$USER/Desktop"
     "Downloads:/home/$USER/Downloads"
      "HDD4TB:/mnt/hdd4tb"
 )
