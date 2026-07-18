@@ -28,7 +28,7 @@ SCRIPT_FILES=(
     "sunshine.sh"
 )
 SCRIPT_SUBS=(
-    "all:|ip only:--ip|ssh only:--ssh|wol only:--wol|smb only:--smb"  # network
+    "all:|ip only:--ip|ssh only:--ssh|wol only:--wol|smb only:--smb|smb manage:--smb-manage"  # network
     ""  # packages
     "install:--install|uninstall:--uninstall"  # font
     ""  # ddcutil
