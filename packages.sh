@@ -87,7 +87,8 @@ OFFICIAL_APPLICATIONS=(
     mpv                         # Media Player
     swayimg                     # Image Viewer
     mpd                         # Music Player daemon
-    ncmpcpp                     # Music Player MPD client
+    mpc                         # Music Player CLI remote for MPD
+    ncmpcpp                     # Music Player TUI client for MPD
 
     # yazi                      # Terminal file manager
     nautilus                    # Graphical file manager
