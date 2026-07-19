@@ -65,19 +65,19 @@ sunshine_config() {
 
 sunshine_enable() {
     header "sunshine — enable"
-    info "creating headless monitor (HEADLESS-1)..."
-    mmsg dispatch create_virtual_output
+    info "creating headless monitor (TV)..."
+    hyprctl output create headless TV
     info "starting sunshine..."
-    systemctl --user start app-dev.lizardbyte.app.Sunshine.service
+    systemctl --user start sunshine
     ok "sunshine running — configure at https://localhost:47990"
 }
 
 sunshine_disable() {
     header "sunshine — disable"
     info "stopping sunshine..."
-    systemctl --user stop app-dev.lizardbyte.app.Sunshine.service
-    info "removing headless monitor (HEADLESS-1)..."
-    mmsg dispatch destroy_all_virtual_output
+    systemctl --user stop sunshine
+    info "removing headless monitor (TV)..."
+    hyprctl output remove TV
     ok "sunshine stopped"
 }
 

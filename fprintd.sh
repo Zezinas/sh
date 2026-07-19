@@ -1,5 +1,9 @@
 #!/bin/bash
 #
+# Updates on official CS9711 support:
+# https://gitlab.freedesktop.org/libfprint/libfprint/-/work_items/610#note_2357409
+# https://gitlab.freedesktop.org/edraac/libfprint.git#branch=cs9711
+#
 # install_fprintd.sh
 # Automate installation of fprintd + CS9711 driver on Arch-based distros
 
