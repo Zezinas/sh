@@ -8,6 +8,10 @@ echo "=== Starting package installation ==="
 echo "Updating system and ensuring paru (AUR helper) is available..."
 sudo pacman -Syu --noconfirm paru
 
+# Generate standard XDG directories (Desktop, Downloads, Music, etc.)
+sudo pacman -S --noconfirm xdg-user-dirs
+xdg-user-dirs-update
+
 # --- OFFICIAL REPO PACKAGES ---
 # Default: install everything. Toggle any of these to 0 to skip.
 INSTALL_HYPRLAND=1
@@ -27,7 +31,6 @@ OFFICIAL_HYPRLAND=(
 OFFICIAL_MANGOWM=(
     mangowm                     # Wayland compositor
     xdg-desktop-portal-wlr      # Mango     - Flatpak & screen sharing integration
-    # xdg-user-dirs               # generate default folders, commnad: xdg-user-dirs-update
 )
 
 # Shared Wayland stack (greetd, uwsm, quickshell, portals, helpers)
@@ -180,17 +183,6 @@ application/toml=dev.zed.Zed.desktop
 EOF
 
 echo "=== Default application setup completed! ==="
-
-
-# echo "=== Removing useless packages... ==="
-# sudo pacman -Rdd --noconfirm xdg-desktop-portal-gtk 2>/dev/null || true
-# echo "=== DONE. DONE. DONE. DONE. DONE. ==="
-
-# A.** `systemctl --user enable --now xdg-desktop-portal.service` (clean, persistent)
-# B.** Add `exec-once = /usr/lib/xdg-desktop-portal -r` to MangoWM's config (lives with compositor config)
-
-
-
 
 
 #####  ---------------------------------------- ######
