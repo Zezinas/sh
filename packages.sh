@@ -64,6 +64,7 @@ OFFICIAL_UTILITY=(
     samba                       # SMB/CIFS file sharing
 
     git                         # Version control
+    ufw                         # Firewall
     rsync                       # File sync and backup utility
     wget                        # Command-line file downloader
     ripgrep                     # Fast recursive text search
@@ -78,8 +79,14 @@ OFFICIAL_APPLICATIONS=(
     alacritty                   # GPU-accelerated terminal emulator
     zed                         # Modern code editor
     zen-browser-bin             # Web Browser
-    # yazi                      # Terminal file manager
+    bitwarden                   # Password manager
 
+    mpv                         # Media Player
+    swayimg                     # Image Viewer
+    mpd                         # Music Player daemon
+    ncmpcpp                     # Music Player MPD client
+
+    # yazi                      # Terminal file manager
     nautilus                    # Graphical file manager
     # xdg-desktop-portal-gtk    # GTK file picker portal
     # xdg-desktop-portal-termfilechooser
@@ -100,7 +107,7 @@ OFFICIAL_GAMES=(
 AUR_PACKAGES=(
     proton-ge-custom-bin        # Proton GE custom binary --- --- --- PROTON_ENABLE_WAYLAND=1 %command%
     vicinae-bin                 # Raycast-like launcher
-    app2unit                    # uwsm faster app launch using bash
+    # app2unit                    # uwsm faster app launch using bash
 )
 
 
@@ -181,3 +188,13 @@ echo "=== Default application setup completed! ==="
 
 # A.** `systemctl --user enable --now xdg-desktop-portal.service` (clean, persistent)
 # B.** Add `exec-once = /usr/lib/xdg-desktop-portal -r` to MangoWM's config (lives with compositor config)
+
+
+
+
+
+#####  ---------------------------------------- ######
+
+# | **Media Player** | `mpv` + uosc + thumfast |
+# | **Image Viewer** | `swayimg` |
+# | **Music Player** | `mpd` + `ncmpcpp` | +[ `MPDroid` (Android) or `MaximumMPD` (iOS) ] +[ `Euphonica` (client)]
