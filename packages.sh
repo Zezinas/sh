@@ -92,6 +92,12 @@ OFFICIAL_APPLICATIONS=(
 
     # yazi                      # Terminal file manager
     nautilus                    # Graphical file manager
+    sushi                       # nautilus plugin: quickview -> nautilus -q (to refresh plugins)
+    gst-plugins-good            # sushi plugin codec #1
+    gst-plugins-bad             # sushi plugin codec #2
+    gst-plugins-ugly            # sushi plugin codec #3
+    gst-libav                   # sushi plugin codec #4
+
     # xdg-desktop-portal-gtk    # GTK file picker portal
     # xdg-desktop-portal-termfilechooser
 )
