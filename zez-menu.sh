@@ -35,7 +35,7 @@ SCRIPT_SUBS=(
     ""  # fprintd
     ""  # greetd
     ""  # hypr plugins
-    "install:--install|status:--status|config:--conf|enable:--enable|disable:--disable"  # sunshine
+    "install:--install|uninstall:--uninstall|status:--status|config:--config|enable:--enable|disable:--disable"  # sunshine
 )
 
 # ─── helpers ───────────────────────────────────────────────────────────────────
