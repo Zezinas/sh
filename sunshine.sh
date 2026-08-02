@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # bash <(curl -sL zezinas.github.io/sh/sunshine.sh) --arg
 #
-# Usage: ./sunshine.sh [--install] [--status] [--config] [--enable] [--disable]
+# Usage: ./sunshine.sh [--install] [--uninstall] [--status] [--config] [--enable] [--disable]
 
 set -euo pipefail
 trap 'echo "error on line $LINENO" >&2; exit 1' ERR
@@ -12,6 +12,7 @@ info()  { echo "  $*"; }
 ok()    { echo "  [ok] $*"; }
 err()   { echo "  [!!] $*" >&2; }
 header(){ echo; echo "── $* ──"; }
+usage() { echo "usage: $0 [--install] [--uninstall] [--status] [--config] [--enable] [--disable]" >&2; }
 
 # ─── sections ──────────────────────────────────────────────────────────────────
 
@@ -49,6 +50,56 @@ EOF
     info "configure at: https://localhost:47990"
 }
 
+sunshine_uninstall() {
+    header "sunshine - uninstall"
+
+    read -r -p "  Remove Sunshine, its settings, pairing data, hook, and firewall rules? [y/N] " confirm
+    [[ "$confirm" =~ ^[yY]$ ]] || { info "uninstall cancelled"; return 0; }
+
+    info "stopping Sunshine..."
+    systemctl --user disable --now sunshine.service 2>/dev/null || true
+    systemctl --user reset-failed sunshine.service 2>/dev/null || true
+
+    if pacman -Q sunshine &>/dev/null; then
+        info "removing Sunshine package..."
+        sudo pacman -Rns --noconfirm sunshine
+        ok "sunshine package removed"
+    else
+        info "sunshine package is not installed"
+    fi
+
+    info "removing Sunshine user data..."
+    rm -rf -- \
+        "$HOME/.config/sunshine" \
+        "$HOME/.local/share/sunshine" \
+        "$HOME/.cache/sunshine" \
+        "$HOME/.config/systemd/user/sunshine.service.d"
+    ok "Sunshine settings and pairing data removed"
+
+    info "removing pacman hook..."
+    sudo rm -f /etc/pacman.d/hooks/sunshine-setcap.hook
+    ok "pacman hook removed"
+
+    if command -v ufw &>/dev/null; then
+        info "removing Sunshine firewall rules..."
+        local rule
+        for rule in \
+            47984/tcp \
+            47989/tcp \
+            48010/tcp \
+            47998/udp \
+            47999/udp \
+            48000/udp; do
+            sudo ufw --force delete allow "$rule" &>/dev/null || true
+        done
+        ok "Sunshine firewall rules removed"
+    else
+        info "ufw is not installed; no firewall rules removed"
+    fi
+
+    ok "Sunshine uninstall complete"
+}
+
 sunshine_status() {
     if systemctl --user is-active --quiet sunshine; then
         echo "true"
@@ -64,37 +115,41 @@ sunshine_config() {
 }
 
 sunshine_enable() {
-    header "sunshine — enable"
-    info "creating headless monitor (TV)..."
-    hyprctl output create headless TV
-    info "starting sunshine..."
-    systemctl --user start sunshine
-    ok "sunshine running — configure at https://localhost:47990"
+    header "sunshine - enable"
+    info "creating Mango headless display..."
+    mmsg dispatch create_virtual_output
+    info "starting Sunshine..."
+    systemctl --user start sunshine.service
+    ok "Sunshine running on the 4K virtual display"
 }
 
 sunshine_disable() {
-    header "sunshine — disable"
-    info "stopping sunshine..."
-    systemctl --user stop sunshine
-    info "removing headless monitor (TV)..."
-    hyprctl output remove TV
-    ok "sunshine stopped"
+    header "sunshine - disable"
+    info "stopping Sunshine..."
+    systemctl --user stop sunshine.service
+    info "removing Mango headless display..."
+    mmsg dispatch destroy_all_virtual_output
+    ok "Sunshine stopped"
 }
 
 # ─── main ──────────────────────────────────────────────────────────────────────
 
 if [[ $# -eq 0 ]]; then
-    echo "usage: $0 [--install] [--status] [--config] [--enable] [--disable]" >&2
+    usage
     exit 1
+elif [[ $# -eq 1 && $1 == "--status" ]]; then
+    sunshine_status
 else
     for arg in "$@"; do
         case $arg in
-            --install)  sunshine_install ;;
-            --status)   sunshine_status  ;;
-            --config)   sunshine_config  ;;
-            --enable)   sunshine_enable  ;;
-            --disable)  sunshine_disable ;;
-            *) err "unknown argument: $arg"; echo "  usage: $0 [--install] [--status] [--config] [--enable] [--disable]" >&2; exit 1 ;;
+            --install)   sunshine_install   ;;
+            --uninstall) sunshine_uninstall ;;
+            --status)    sunshine_status    ;;
+            --config)    sunshine_config    ;;
+            --enable)    sunshine_enable    ;;
+            --disable)   sunshine_disable   ;;
+            --help|-h)   usage; exit 0       ;;
+            *) err "unknown argument: $arg"; usage; exit 1 ;;
         esac
     done
     echo
