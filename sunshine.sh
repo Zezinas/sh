@@ -57,8 +57,8 @@ sunshine_uninstall() {
     [[ "$confirm" =~ ^[yY]$ ]] || { info "uninstall cancelled"; return 0; }
 
     info "stopping Sunshine..."
-    systemctl --user disable --now sunshine.service 2>/dev/null || true
-    systemctl --user reset-failed sunshine.service 2>/dev/null || true
+    systemctl --user disable --now app-dev.lizardbyte.app.Sunshine.service 2>/dev/null || true
+    systemctl --user reset-failed app-dev.lizardbyte.app.Sunshine.service 2>/dev/null || true
 
     if pacman -Q sunshine &>/dev/null; then
         info "removing Sunshine package..."
@@ -73,7 +73,7 @@ sunshine_uninstall() {
         "$HOME/.config/sunshine" \
         "$HOME/.local/share/sunshine" \
         "$HOME/.cache/sunshine" \
-        "$HOME/.config/systemd/user/sunshine.service.d"
+        "$HOME/.config/systemd/user/app-dev.lizardbyte.app.Sunshine.service.d"
     ok "Sunshine settings and pairing data removed"
 
     info "removing pacman hook..."
@@ -101,7 +101,7 @@ sunshine_uninstall() {
 }
 
 sunshine_status() {
-    if systemctl --user is-active --quiet sunshine; then
+    if systemctl --user is-active --quiet app-dev.lizardbyte.app.Sunshine.service; then
         echo "true"
     else
         echo "false"
@@ -119,14 +119,14 @@ sunshine_enable() {
     info "creating Mango headless display..."
     mmsg dispatch create_virtual_output
     info "starting Sunshine..."
-    systemctl --user start sunshine.service
+    systemctl --user start app-dev.lizardbyte.app.Sunshine.service
     ok "Sunshine running on the 4K virtual display"
 }
 
 sunshine_disable() {
     header "sunshine - disable"
     info "stopping Sunshine..."
-    systemctl --user stop sunshine.service
+    systemctl --user stop app-dev.lizardbyte.app.Sunshine.service
     info "removing Mango headless display..."
     mmsg dispatch destroy_all_virtual_output
     ok "Sunshine stopped"
