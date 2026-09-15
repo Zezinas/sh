@@ -126,9 +126,9 @@ rm -rf ~/aur
 # mangowm
 paru -S --noconfirm --needed mangowm
 # quickshell-git
-cd /tmp/paru-clone/quickshell-git && MAKEFLAGS="-j1" makepkg -si --noconfirm -A
+MAKEFLAGS="-j1" paru -S --noconfirm --needed quickshell-git
 # vicinae-git
-cd /tmp/paru-clone/vicinae-git && CARGO_BUILD_JOBS=1 makepkg -si --noconfirm
+CARGO_BUILD_JOBS=1 paru -S --noconfirm --needed vicinae-git
 
 
 # === mimeapps (optional: guard directory) ===
