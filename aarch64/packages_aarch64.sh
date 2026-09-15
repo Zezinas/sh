@@ -75,7 +75,7 @@ OFFICIAL_UTILITY=(
 
 OFFICIAL_APPLICATIONS=(
     alacritty                   # GPU-accelerated terminal emulator
-    bitwarden                   # Password manager
+    # bitwarden                   # Password manager
 )
 
 # === AUR (paru aarch64) ===
