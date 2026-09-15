@@ -80,10 +80,11 @@ OFFICIAL_APPLICATIONS=(
 
 # === AUR (paru aarch64) ===
 AUR_PACKAGES=(
-    # system
-    mangowm                     # Wayland compositor
-    quickshell-git              # Custom shell
-    vicinae-git                 # Raycast-like launcher
+    # system (needs build from source/flags...)
+    # mangowm                     # Wayland compositor
+    # quickshell-git              # Custom shell
+    # vicinae-git                 # Raycast-like launcher
+
     # applications
     zed-bin                     # Modern code editor
     zen-browser-bin             # Web Browser
@@ -107,6 +108,27 @@ install_aur() {
 }
 install_aur
 
+
+# system (needs build from source/flags...)
+# mangowm                     # Wayland compositor
+# quickshell-git              # Custom shell
+# vicinae-git                 # Raycast-like launcher
+
+# AUR aarch64 dependancy source compile
+# scenefx0.5 (needed for mangowm)
+mkdir -p ~/aur && cd ~/aur
+git clone https://aur.archlinux.org/scenefx0.5.git
+cd scenefx0.5
+makepkg -si -A --noconfirm            # builds natively on aarch64 (C/wlroots)
+cd
+rm -rf ~/aur
+
+# mangowm
+paru -S --noconfirm --needed mangowm
+# quickshell-git
+cd /tmp/paru-clone/quickshell-git && MAKEFLAGS="-j1" makepkg -si --noconfirm -A
+# vicinae-git
+cd /tmp/paru-clone/vicinae-git && CARGO_BUILD_JOBS=1 makepkg -si --noconfirm
 
 
 # === mimeapps (optional: guard directory) ===
