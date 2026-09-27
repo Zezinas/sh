@@ -16,6 +16,7 @@ fi
 
 # === Official repos (ALARM aarch64) ===
 OFFICIAL_WAYLAND=(
+    quickshell                  # Custom shell
     swaybg                      # Wallpaper manager for Wayland compositor
     swayidle                    # Idle manager (suspend, lock, etc.)
 
@@ -81,14 +82,33 @@ OFFICIAL_APPLICATIONS=(
 # === AUR (paru aarch64) ===
 AUR_PACKAGES=(
     # system (needs build from source/flags...)
-    # mangowm                     # Wayland compositor
-    # quickshell-git              # Custom shell
-    # vicinae-git                 # Raycast-like launcher
+    mangowm                     # Wayland compositor
+    # quickshell                  # Custom shell
+    # vicinae                     # Raycast-like launcher
 
     # applications
     zed-bin                     # Modern code editor
     zen-browser-bin             # Web Browser
 )
+
+# paru -S mangowm
+# sudo pacman -S quickshell
+# paru -S vicinae
+
+
+### --- --- --- --- ---
+# sudo touch /swapfile && \
+# sudo chattr +C /swapfile 2>/dev/null || true && \
+# sudo dd if=/dev/zero of=/swapfile bs=1M count=4096 status=progress && \
+# sudo chmod 600 /swapfile && \
+# sudo mkswap /swapfile && \
+# sudo swapon /swapfile
+
+# MAKEFLAGS="-j1" paru -S vicinae
+
+# sudo swapoff /swapfile && sudo rm /swapfile
+### --- --- --- --- ---
+
 
 install_official() {
   local label=$1; shift
