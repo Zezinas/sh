@@ -1,16 +1,9 @@
 #!/bin/bash
+set -e
 
 # =====================
-# Default configuration
-# =====================
-
-GREET_USER="${SUDO_USER:-$USER}"
-GREETER_MODE="tuigreet"     # tuigreet | quickshell
-QS_GREET_QML="$HOME/.config/quickshell/greet"
-
-# =============
 # Package logic
-# =============
+# =====================
 
 PACKAGES=(
     greetd
@@ -28,40 +21,24 @@ if (( ${#TO_INSTALL[@]} > 0 )); then
 fi
 
 # ==========================
-# Build greetd configuration
+# Session & greetd setup
 # ==========================
 
-case "$GREETER_MODE" in
-    tuigreet)
-        SESSION_DIR="/usr/local/share/wayland-sessions-uwsm"
-        sudo mkdir -p "$SESSION_DIR"
+SESSION_DIR="/usr/local/share/wayland-sessions-uwsm"
+sudo mkdir -p "$SESSION_DIR"
 
-        for session in mango hyprland hyprland-uwsm; do
-            sudo tee "$SESSION_DIR/$session.desktop" > /dev/null << DESKTOPEOF
+sudo tee "$SESSION_DIR/mango.desktop" > /dev/null << DESKTOPEOF
 [Desktop Entry]
-Name=${session%.*}
-Comment=${session} with uwsm
-Exec=uwsm start ${session}.desktop
+Name=mango
+Comment=mangowm with uwsm
+Exec=uwsm start mango.desktop
 Type=Application
 DESKTOPEOF
-        done
 
-        sudo mkdir -p /var/cache/tuigreet
-        sudo chown greeter:greeter /var/cache/tuigreet
+sudo mkdir -p /var/cache/tuigreet
+sudo chown greeter:greeter /var/cache/tuigreet
 
-        GREETER_CMD="tuigreet --cmd 'uwsm start mango.desktop' --sessions $SESSION_DIR --remember --user-menu"
-        ;;
-    quickshell)
-        mkdir -p "$QS_GREET_QML"
-        echo "$GREET_USER" > "$QS_GREET_QML/session"
-        echo "uwsm start" >> "$QS_GREET_QML/session"
-        GREETER_CMD="cage -- quickshell -p $QS_GREET_QML/shell.qml"
-        ;;
-    *)
-        echo "  [!!] Invalid GREETER_MODE: $GREETER_MODE" >&2
-        exit 1
-        ;;
-esac
+GREETER_CMD="tuigreet --cmd 'uwsm start mango.desktop' --sessions $SESSION_DIR --remember --user-menu"
 
 # ==========================
 # Write greetd configuration

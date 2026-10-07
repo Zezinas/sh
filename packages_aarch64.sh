@@ -1,30 +1,22 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 trap 'echo "Error occurred on line $LINENO"; exit 1' ERR
 
-echo "=== Starting package installation ==="
+# === Bootstrap: pacman base + Rust (paru is Rust) ===
+echo "=== Bootstrapping ALARM (aarch64) base toolchain ==="
+sudo pacman -Syu --noconfirm
+sudo pacman -S  --needed --noconfirm base-devel git sudo rust cargo
 
-# --- CORE HELPERS ---
-echo "Updating system and ensuring paru (AUR helper) is available..."
-sudo pacman -Syu --noconfirm paru
+# === paru via AUR makepkg ===
+if ! command -v paru >/dev/null; then
+  WORK="$(mktemp -d)"
+  git clone https://aur.archlinux.org/paru.git "$WORK/paru"
+  ( cd "$WORK/paru" && makepkg -si --noconfirm )
+fi
 
-# Generate standard XDG directories (Desktop, Downloads, Music, etc.)
-sudo pacman -S --noconfirm xdg-user-dirs
-xdg-user-dirs-update
-
-# --- OFFICIAL REPO PACKAGES ---
-# Default: install everything. Toggle any of these to 0 to skip.
-INSTALL_WAYLAND=1
-INSTALL_UTILITY=1
-INSTALL_APPLICATIONS=1
-INSTALL_GAMES=1
-INSTALL_AUR=1
-
+# === Official repos (ALARM aarch64) ===
 OFFICIAL_WAYLAND=(
-    mangowm                     # Wayland compositor
     quickshell                  # Custom shell
-    # vicinae                   # Raycast-like launcher (*AUR-only*)
-
     swaybg                      # Wallpaper manager for Wayland compositor
     swayidle                    # Idle manager (suspend, lock, etc.)
 
@@ -47,7 +39,6 @@ OFFICIAL_WAYLAND=(
     cliphist                    # Clipboard history utility
 )
 
-# Core utilities
 OFFICIAL_UTILITY=(
     # networking
     ufw                         # Firewall
@@ -83,73 +74,64 @@ OFFICIAL_UTILITY=(
     gst-libav                   # sushi plugin codec #4
 )
 
-# Core utilities / applications
 OFFICIAL_APPLICATIONS=(
     alacritty                   # GPU-accelerated terminal emulator
-    zed                         # Modern code editor
-    zen-browser-bin             # Web Browser
-    bitwarden                   # Password manager
+    # bitwarden                   # Password manager
 )
 
-# Core gaming
-OFFICIAL_GAMES=(
-    discord                     # Chat / communication app
-    cachyos-gaming-meta         # Gaming meta package
-    steam                       # Steam gaming platform
-    mangohud                    # Mangohud - Hardware monitoring overlay
-    lib32-mangohud              # Mangohud library - 32-bit hardware monitoring overlay library
-    gamescope                   # lightweight display compositor by steam
-)
-
-# --- AUR PACKAGES ---
-# Optional / AUR apps
+# === AUR (paru aarch64) ===
 AUR_PACKAGES=(
-    proton-ge-custom-bin        # Proton GE custom binary --- --- --- PROTON_ENABLE_WAYLAND=1 %command%
-    vicinae-bin                 # Raycast-like launcher
-    # app2unit                    # uwsm faster app launch using bash
+    # system (needs build from source/flags...)
+    mangowm                     # Wayland compositor
+    # quickshell                  # Custom shell
+    # vicinae                     # Raycast-like launcher
+
+    # applications
+    zed-bin                     # Modern code editor
+    zen-browser-bin             # Web Browser
 )
+
+# paru -S mangowm
+# sudo pacman -S quickshell
+# paru -S vicinae
+
+
+### --- --- --- --- ---
+# sudo touch /swapfile && \
+# sudo chattr +C /swapfile 2>/dev/null || true && \
+# sudo dd if=/dev/zero of=/swapfile bs=1M count=4096 status=progress && \
+# sudo chmod 600 /swapfile && \
+# sudo mkswap /swapfile && \
+# sudo swapon /swapfile
+
+# MAKEFLAGS="-j1" paru -S vicinae
+
+# sudo swapoff /swapfile && sudo rm /swapfile
+### --- --- --- --- ---
 
 
 install_official() {
-    local label=$1; shift
-    local -n pkgs=$1                 # nameref: indirect array
-
-    if (( ${#pkgs[@]} == 0 )); then
-        echo "  [skip] $label (no packages)"
-        return
-    fi
-
-    echo "  [..] Installing $label (${#pkgs[@]} packages)..."
-    sudo pacman -S --noconfirm --needed "${pkgs[@]}"
+  local label=$1; shift
+  if (( ${#@} == 0 )); then echo "  [skip] $label (empty)"; return; fi
+  echo "  [..] Installing $label (${#} packages)..."
+  sudo pacman -S --noconfirm --needed "$@"
 }
 
-declare -A SECTIONS=(
-    ["Wayland stack"]="INSTALL_WAYLAND:OFFICIAL_WAYLAND"
-    ["Utilities"]="INSTALL_UTILITY:OFFICIAL_UTILITY"
-    ["Applications"]="INSTALL_APPLICATIONS:OFFICIAL_APPLICATIONS"
-    ["Games"]="INSTALL_GAMES:OFFICIAL_GAMES"
-)
+echo "=== Installing official ALARM aarch64 packages ==="
+install_official "Wayland stack"        "${OFFICIAL_WAYLAND[@]}"
+install_official "Core utilities"       "${OFFICIAL_UTILITY[@]}"
+install_official "Core applications"    "${OFFICIAL_APPLICATIONS[@]}"
 
-for label in "${!SECTIONS[@]}"; do
-    IFS=':' read -r flag array <<< "${SECTIONS[$label]}"
-    if (( flag )); then
-        install_official "$label" "$array"
-    else
-        echo "  [skip] $label (disabled)"
-    fi
-done
-
-if (( INSTALL_AUR )); then
-    if (( ${#AUR_PACKAGES[@]} )); then
-        echo "  [..] Installing AUR packages (${#AUR_PACKAGES[@]})..."
-        paru -S --noconfirm --needed "${AUR_PACKAGES[@]}"
-    fi
-fi
-
-echo "=== Package installation completed! ==="
+install_aur() {
+  echo "  [..] Installing AUR packages (${#AUR_PACKAGES[@]} packages)..."
+  paru -S --noconfirm --needed "${AUR_PACKAGES[@]}"
+}
+install_aur
 
 
-echo "=== Setting default applications ... ==="
+# === mimeapps (optional: guard directory) ===
+echo "=== Setting default applications ==="
+mkdir -p ~/.config
 
 cat > ~/.config/mimeapps.list << 'EOF'
 [Default Applications]
@@ -176,11 +158,4 @@ application/x-yaml=dev.zed.Zed.desktop
 application/toml=dev.zed.Zed.desktop
 EOF
 
-echo "=== Default application setup completed! ==="
-
-
-#####  ---------------------------------------- ######
-
-# | **Media Player** | `mpv` + uosc + thumfast |
-# | **Image Viewer** | `swayimg` |
-# | **Music Player** | `mpd` + `ncmpcpp` | +[ `MPDroid` (Android) or `MaximumMPD` (iOS) ] +[ `Euphonica` (client)]
+echo "=== Done. ALARM aarch64 setup complete. ==="
